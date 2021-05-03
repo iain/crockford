@@ -22,7 +22,7 @@ RSpec.describe Crockford do
     expect(Crockford.generate(length: 6, split: 3).size).to eq 7
   end
 
-  xit "encodes strings" do
+  it "encodes byte strings" do
     bytes = SecureRandom.bytes(16)
     expect(Crockford.decode_bytes(Crockford.encode_bytes(bytes))).to eq bytes
   end

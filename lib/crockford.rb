@@ -8,17 +8,30 @@ module Crockford
 
   DECODER = ENCODER.each_with_index.to_h.transform_keys(&:to_s).merge({ "I" => 1, "L" => 1, "O" => 0 }).freeze
 
-  def self.encode(number, split: false, length: nil)
+  def self.encode(input, **kwargs)
+    case input
+    when Integer
+      encode_number(input, **kwargs)
+    else
+      encode_bytes(input.to_str, **kwargs)
+    end
+  end
+
+  def self.decode(string)
+    decode_number(string)
+  end
+
+  def self.encode_number(number, split: false, length: nil)
     fail ArgumentError, "Not a number: #{number.inspect}" if !number.is_a?(Integer)
 
-    string = number.to_s(2).reverse.scan(/.{1,5}/).map { |bits|
-      ENCODER[bits.reverse.to_i(2)]
+    string = number.to_s(2).each_char.reverse_each.each_slice(5).map { |bits|
+      ENCODER[bits.reverse.join.to_i(2)]
     }.reverse.join
 
     _format(string, split: split, length: length)
   end
 
-  def self.decode(string)
+  def self.decode_number(string)
     _clean(string).each_char.inject(0) { |result, char|
       val = DECODER[char]
       return nil if val.nil?
@@ -28,13 +41,15 @@ module Crockford
 
   def self.encode_bytes(string, split: false, length: nil)
     number = string.bytes.map { |byte| "%08b" % byte }.join.to_i(2)
-    encode(number, split: split, length: length)
+    encode_number(number, split: split, length: length)
   end
 
   def self.decode_bytes(string)
-    number = decode(string)
-    [ number ].pack("C*")
-    # TODO
+    number = decode_number(string)
+    return nil if number.nil?
+    number.to_s(2).each_char.reverse_each.each_slice(8).map { |byte|
+      byte.reverse.join.to_i(2)
+    }.reverse.pack("C*")
   end
 
   def self.normalize(string, split: false, length: string.length, unknown: "?")
@@ -45,11 +60,11 @@ module Crockford
   end
 
   def self.valid?(string)
-    !decode(sting).nil?
+    !decode_number(sting).nil?
   end
 
   def self.generate(length:, split: false)
-    encode(SecureRandom.random_number(32**length), split: split, length: length)
+    encode_number(SecureRandom.random_number(32**length), split: split, length: length)
   end
 
   def self._clean(string)
@@ -57,12 +72,18 @@ module Crockford
   end
 
   def self._format(string, length: nil, split: false)
-    string = string.rjust(length, "0") if length
+    if length
+      string = string.rjust(length, "0")
+    end
 
     if split
-      string = string.reverse
-      string = string.scan(/.{1,#{split}}/).map { |x| x.reverse }
-      string = string.reverse.join("-")
+      string = string
+        .each_char
+        .reverse_each
+        .each_slice(split)
+        .map { |segment| segment.reverse.join }
+        .reverse
+        .join("-")
     end
 
     string
