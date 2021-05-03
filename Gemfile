@@ -7,5 +7,5 @@ gemspec
 
 gem "rake"
 gem "rspec"
-gem "rubocop"
+gem "standardrb"
 gem "pry"

@@ -3,10 +3,9 @@
 require_relative "crockford/version"
 
 module Crockford
+  ENCODER = %w[0 1 2 3 4 5 6 7 8 9 A B C D E F G H J K M N P Q R S T V W X Y Z]
 
-  ENCODER = %w(0 1 2 3 4 5 6 7 8 9 A B C D E F G H J K M N P Q R S T V W X Y Z)
-
-  DECODER = ENCODER.each_with_index.to_h.transform_keys(&:to_s).merge({ "I" => 1, "L" => 1, "O" => 0 }).freeze
+  DECODER = ENCODER.each_with_index.to_h.transform_keys(&:to_s).merge({"I" => 1, "L" => 1, "O" => 0}).freeze
 
   def self.encode(input, **kwargs)
     case input
@@ -22,7 +21,7 @@ module Crockford
   end
 
   def self.encode_number(number, split: false, length: nil)
-    fail ArgumentError, "Not a number: #{number.inspect}" if !number.is_a?(Integer)
+    fail ArgumentError, "Not a number: #{number.inspect}" unless number.is_a?(Integer)
 
     string = number.to_s(2).each_char.reverse_each.each_slice(5).map { |bits|
       ENCODER[bits.reverse.join.to_i(2)]
@@ -88,5 +87,4 @@ module Crockford
 
     string
   end
-
 end

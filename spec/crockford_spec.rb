@@ -3,7 +3,6 @@
 require "securerandom"
 
 RSpec.describe Crockford do
-
   it "has a version number" do
     expect(Crockford::VERSION).not_to be nil
   end
@@ -27,7 +26,7 @@ RSpec.describe Crockford do
     expect(Crockford.decode_bytes(Crockford.encode_bytes(bytes))).to eq bytes
   end
 
-  it "does more"  do
+  it "does more" do
     expect(Crockford.decode("OI")).to eq(1)
     expect(Crockford.decode("3G923-0VQVS")).to eq(123456789012345)
   end
@@ -43,5 +42,4 @@ RSpec.describe Crockford do
     expect(Crockford.encode(100**10, split: 5, length: 15)).to eq("02PQH-TY5NH-H0000")
     expect(Crockford.decode("2pqh-ty5nh-hoooo")).to eq(100**10)
   end
-
 end
