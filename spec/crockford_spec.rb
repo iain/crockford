@@ -8,13 +8,13 @@ RSpec.describe Crockford do
   end
 
   it "encodes a single value" do
-    expect(Crockford.encode(31)).to eq("Z")
-    expect(Crockford.decode("Z")).to eq(31)
+    expect(Crockford.encode_number(31)).to eq("Z")
+    expect(Crockford.decode_number("Z")).to eq(31)
   end
 
   it "encodes longer" do
-    expect(Crockford.encode(1234)).to eq("16J")
-    expect(Crockford.decode("16J")).to eq(1234)
+    expect(Crockford.encode_number(1234)).to eq("16J")
+    expect(Crockford.decode_number("16J")).to eq(1234)
   end
 
   it "generates fixed length" do
@@ -23,12 +23,13 @@ RSpec.describe Crockford do
 
   it "encodes byte strings" do
     bytes = SecureRandom.bytes(16)
-    expect(Crockford.decode_bytes(Crockford.encode_bytes(bytes))).to eq bytes
+    code = Crockford.encode_string(bytes)
+    expect(Crockford.decode_string(code)).to eq bytes
   end
 
   it "does more" do
-    expect(Crockford.decode("OI")).to eq(1)
-    expect(Crockford.decode("3G923-0VQVS")).to eq(123456789012345)
+    expect(Crockford.decode_number("OI")).to eq(1)
+    expect(Crockford.decode_number("3G923-0VQVS")).to eq(123456789012345)
   end
 
   it "normalizes" do
@@ -39,7 +40,7 @@ RSpec.describe Crockford do
   end
 
   it "splits" do
-    expect(Crockford.encode(100**10, split: 5, length: 15)).to eq("02PQH-TY5NH-H0000")
-    expect(Crockford.decode("2pqh-ty5nh-hoooo")).to eq(100**10)
+    expect(Crockford.encode_number(100**10, split: 5, length: 15)).to eq("02PQH-TY5NH-H0000")
+    expect(Crockford.decode_number("2pqh-ty5nh-hoooo")).to eq(100**10)
   end
 end
