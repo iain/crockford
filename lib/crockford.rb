@@ -2,44 +2,49 @@
 
 require_relative "crockford/version"
 
+# Encodes and decodes Crockford's Base32 variation.
 module Crockford
-  ENCODER = %w[0 1 2 3 4 5 6 7 8 9 A B C D E F G H J K M N P Q R S T V W X Y Z]
-  DECODER = ENCODER.each_with_index.to_h.transform_keys(&:to_s).merge({"I" => 1, "L" => 1, "O" => 0}).freeze
+
+  ENCODER = %w[0 1 2 3 4 5 6 7 8 9 A B C D E F G H J K M N P Q R S T V W X Y Z].freeze
+  DECODER = ENCODER.each_with_index.to_h.transform_keys(&:to_s).merge({ "I" => 1, "L" => 1, "O" => 0 }).freeze
 
   class << self
+
     def encode_number(number, **kwargs)
-      string = number.to_s(2).each_char.reverse_each.each_slice(5).map { |bits|
+      string = number.to_s(2).each_char.reverse_each.each_slice(5).map do |bits|
         ENCODER[bits.reverse.join.to_i(2)]
-      }.reverse.join
+      end.reverse.join
 
       format_code(string, **kwargs)
     end
 
     def decode_number(string)
-      clean_code(string).each_char.inject(0) { |result, char|
+      clean_code(string).each_char.inject(0) do |result, char|
         val = DECODER[char]
         return nil if val.nil?
+
         (result << 5) + val
-      }
+      end
     end
 
     def encode_string(string, **kwargs)
-      number = string.bytes.map { |byte| "%08b" % byte }.join.to_i(2)
+      number = string.bytes.map { |byte| format("%08b", byte) }.join.to_i(2)
       encode_number(number, **kwargs)
     end
 
     def decode_string(string)
       number = decode_number(string)
       return nil if number.nil?
-      number.to_s(2).each_char.reverse_each.each_slice(8).map { |byte|
+
+      number.to_s(2).each_char.reverse_each.each_slice(8).map do |byte|
         byte.reverse.join.to_i(2)
-      }.reverse.pack("C*")
+      end.reverse.pack("C*")
     end
 
     def normalize(string, unknown: "?", **kwargs)
-      string = clean_code(string).each_char.inject("") { |memo, char|
+      string = clean_code(string).each_char.inject("") do |memo, char|
         memo + ((index = DECODER[char]) ? ENCODER[index] : unknown)
-      }
+      end
       format_code(string, **kwargs)
     end
 
@@ -58,9 +63,7 @@ module Crockford
     end
 
     def format_code(string, length: nil, split: false)
-      if length
-        string = string.rjust(length, "0")
-      end
+      string = string.rjust(length, "0") if length
 
       if split
         string = string
@@ -74,5 +77,7 @@ module Crockford
 
       string
     end
+
   end
+
 end

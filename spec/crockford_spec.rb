@@ -3,6 +3,7 @@
 require "securerandom"
 
 RSpec.describe Crockford do
+
   it "has a version number" do
     expect(Crockford::VERSION).not_to be nil
   end
@@ -43,4 +44,5 @@ RSpec.describe Crockford do
     expect(Crockford.encode_number(100**10, split: 5, length: 15)).to eq("02PQH-TY5NH-H0000")
     expect(Crockford.decode_number("2pqh-ty5nh-hoooo")).to eq(100**10)
   end
+
 end
