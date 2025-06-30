@@ -12,7 +12,6 @@ like a serial number, or a token sent via SMS.
 
 For more information, see [Douglas Crockford's own website](https://www.crockford.com/base32.html).
 
-
 Note: Crockford's Base32 also allows for a checksum character. This
 functionality has not been implemented yet.
 
@@ -20,10 +19,10 @@ functionality has not been implemented yet.
 
 The encoding scheme is required to
 
-* Be human readable and machine readable.
-* Be compact. Humans have difficulty in manipulating long strings of arbitrary symbols.
-* Be error resistant. Entering the symbols must not require keyboarding gymnastics.
-* Be pronounceable. Humans should be able to accurately transmit the symbols to other humans using a telephone.
+- Be human readable and machine readable.
+- Be compact. Humans have difficulty in manipulating long strings of arbitrary symbols.
+- Be error resistant. Entering the symbols must not require keyboarding gymnastics.
+- Be pronounceable. Humans should be able to accurately transmit the symbols to other humans using a telephone.
 
 ## Usage
 
@@ -115,7 +114,7 @@ trackers, chat rooms and mailing lists is expected to follow the
 
 Some of these haven't been updated in over a decade:
 
-* [base32-crockford](https://rubygems.org/gems/base32-crockford)
-* [base32-multi](https://rubygems.org/gems/base32-multi)
-* [base32-url](https://rubygems.org/gems/base32-url)
-* [base32-alphabets](https://rubygems.org/gems/base32-alphabets)
+- [base32-crockford](https://rubygems.org/gems/base32-crockford)
+- [base32-multi](https://rubygems.org/gems/base32-multi)
+- [base32-url](https://rubygems.org/gems/base32-url)
+- [base32-alphabets](https://rubygems.org/gems/base32-alphabets)
