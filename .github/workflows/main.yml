@@ -6,7 +6,7 @@ jobs:
   build:
     strategy:
       matrix:
-        ruby-version: [2.6.7, 2.7.3, 3.0.1 3.4.4]
+        ruby-version: [2.6.7, 2.7.3, 3.0.1, 3.4.4]
 
     runs-on: ubuntu-latest
 
