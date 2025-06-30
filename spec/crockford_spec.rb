@@ -5,7 +5,7 @@ require "securerandom"
 RSpec.describe Crockford do
 
   it "has a version number" do
-    expect(Crockford::VERSION).not_to be nil
+    expect(Crockford::VERSION).not_to be_nil
   end
 
   it "encodes a single value" do
